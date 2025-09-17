@@ -1,0 +1,9 @@
+package com.AddressProject.Entity;
+
+public class OrderEntity {
+
+	private ProductResponse product;
+	private int orderno;
+	
+	
+}

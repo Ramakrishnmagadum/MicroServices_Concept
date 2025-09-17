@@ -1,0 +1,21 @@
+package com.AddressProject.Controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.AddressProject.Entity.OrderEntity;
+import com.AddressProject.Entity.ProductResponse;
+
+@RestController
+public class OrderController {
+	
+	@GetMapping("/order")
+	public OrderEntity getProductDetails() {
+		OrderEntity order = new OrderEntity();
+		order.setOrderno(100);
+		order.setProduct(new ProductResponse());
+		return order;
+	}
+
+}

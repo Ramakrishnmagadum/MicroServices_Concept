@@ -1,0 +1,30 @@
+package com.HotelService.Exception;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.MicroUserService.Payload.ApiExceptionResponse;
+
+//This will handle the Exception over the Project ...
+//Means it will handle the Exception Globally.....
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+	
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public ResponseEntity<ApiExceptionResponse> handlerResourceNotFoundException(ResourceNotFoundException ex){
+		String msg=ex.getMessage();
+		ApiExceptionResponse response =new ApiExceptionResponse();
+		response.setMsg(msg);
+		response.setStatus(HttpStatus.NOT_FOUND);
+		response.setSucess(true);
+		return new ResponseEntity<ApiExceptionResponse>(response , HttpStatus.NOT_FOUND);
+
+	}
+
+	public static void main(String[] args) {
+		ResourceNotFoundException
+	}
+
+}

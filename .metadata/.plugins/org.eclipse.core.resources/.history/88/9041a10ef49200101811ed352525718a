@@ -1,0 +1,37 @@
+package com.APIGatewayProject;
+
+import org.springframework.cloud.gateway.filter.GlobalFilter;
+import org.springframework.cloud.gateway.filter.factory.rewrite.ModifyRequestBodyGatewayFilterFactory;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
+import org.springframework.core.annotation.Order;
+
+import com.ctc.wstx.util.SymbolTable;
+
+import reactor.core.publisher.Mono;
+
+@Configuration
+public class LoggingFilterConfig {
+
+	@Bean
+	@Order(Ordered.HIGHEST_PRECEDENCE)
+	public GlobalFilter customLogFilter() {
+		return (exchange, chain) -> {
+			String requestPath = exchange.getRequest().getURI().getPath();
+			String routeId = exchange.getAttribute(
+					"org.springframework.cloud.gateway.support.ServerWebExchangeUtils.gatewayRoute") != null
+							? exchange.getAttribute(
+									"org.springframework.cloud.gateway.support.ServerWebExchangeUtils.gatewayRoute")
+									.toString()
+							: "UNKNOWN";
+
+			System.out.println("👉 Incoming Request: " + requestPath + " | Route ID: " + routeId);
+			System.out.println();
+			System.out.println();
+			System.out.println();
+			return chain.filter(exchange).then(Mono.fromRunnable(
+					() -> System.out.println("✅ Response sent for: " + requestPath + " | Route ID: " + routeId)));
+		};
+	}
+}

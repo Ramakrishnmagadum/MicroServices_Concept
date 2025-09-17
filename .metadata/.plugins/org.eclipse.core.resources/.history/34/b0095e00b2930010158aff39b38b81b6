@@ -1,0 +1,5 @@
+spring.application.name=ConfigServerService
+
+spring.cloud.config.server.git.uri=https://github.com/Ramakrishnmagadum/ConfigServer-Repo
+spring.cloud.config.server.git.clone-on-start=true
+

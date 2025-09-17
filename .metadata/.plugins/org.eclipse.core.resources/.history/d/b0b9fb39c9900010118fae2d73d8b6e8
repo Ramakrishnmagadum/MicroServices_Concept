@@ -1,0 +1,25 @@
+package com.MicroUserService.Controller;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+	//create 
+//	@RequestBody why used ??????
+	public ResponseEntity<User> createUser(@RequestBody User user){
+		
+	}
+	
+	
+	//single user get
+	
+	
+	//all user get 
+	
+	
+}

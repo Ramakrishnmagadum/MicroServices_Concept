@@ -1,0 +1,62 @@
+package com.MicroUserService.Controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.MicroUserService.Entites.User;
+import com.MicroUserService.Service.UserService;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+	
+	@Value("${app.message}")
+	private String message;
+
+	@Autowired
+	private UserService userService;
+	
+//	@RequestBody why used ??????convert Json to User Object
+//	@RequestBody --How it works 
+//Incoming request: When a client sends data in the body of an HTTP request (for example, JSON in a POST or PUT request), Spring MVC reads that body.
+//Deserialization: Spring uses an HttpMessageConverter (like Jackson for JSON) to convert that body into the corresponding Java object.
+//Binding to method parameter: The converted object is assigned to the method parameter annotated with @RequestBody.
+	@PostMapping()
+	public ResponseEntity<User> createUser(@RequestBody User user){
+		User user1=userService.saveUser(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(user1);
+	}
+	
+	
+	//single user get
+	@GetMapping("/{userId}")
+	public  ResponseEntity<User> getSingleUserById(@PathVariable("userId")String userId){
+		User user =userService.getUser(userId);
+		return ResponseEntity.status(HttpStatus.OK).body(user);
+	}
+	
+	
+	//all user get 
+	@GetMapping
+	public  ResponseEntity<List<User>> getAllUser(){
+		List<User> user =userService.getAllUser();
+		return ResponseEntity.status(HttpStatus.OK).body(user);
+	}
+	
+	@GetMapping("/message")
+	public String getMessage() {
+		return message;
+	}
+	
+	
+}

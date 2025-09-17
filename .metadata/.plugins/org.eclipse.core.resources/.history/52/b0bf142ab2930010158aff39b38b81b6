@@ -1,0 +1,17 @@
+spring.application.name=USER-SERVICE
+
+spring.datasource.url=jdbc:postgresql://localhost:5432/UserMicroService
+spring.datasource.username=postgres
+spring.datasource.password=postgres123
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+server.port=8082
+#Setting the Context Root Path
+server.servlet.context-path=/user-service
+
+
+spring.jpa.hibernate.ddl-auto=update
+
+
+#It is the address of the Eureka Server that all Eureka Clients use to register and discover services.
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/

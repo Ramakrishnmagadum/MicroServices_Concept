@@ -1,0 +1,20 @@
+package com.RatingService.Service;
+
+import com.RatingService.Entities.Rating;
+
+public interface RatingService {
+
+	//create 
+	Rating create(Rating rating);
+	
+	
+	//get all ratings
+	List<Rating> getReatings();
+	
+	
+	//get all by UserId
+	
+	
+	//get all by hotelId
+	
+}

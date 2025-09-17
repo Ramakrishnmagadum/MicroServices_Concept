@@ -1,0 +1,30 @@
+package com.HotelService.Services;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.HotelService.Entities.Hotel;
+import com.HotelService.Repository.HotelRepository;
+
+public class HotelServiceImpl implements HotelService {
+	
+	@Autowired
+	HotelRepository hotelRepository;
+
+	@Override
+	public Hotel create(Hotel hotel) {
+		return hotelRepository.save(hotel);
+	}
+
+	@Override
+	public List<Hotel> getAll() {
+		return hotelRepository.findAll();
+	}
+
+	@Override
+	public Hotel get(String id) {
+		return hotelRepository.findById(id).orElseThrow(()-> new );
+	}
+
+}

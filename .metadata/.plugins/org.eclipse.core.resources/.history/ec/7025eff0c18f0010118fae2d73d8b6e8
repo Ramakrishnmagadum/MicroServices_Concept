@@ -1,0 +1,19 @@
+package com.AddressProject.Controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.AddressProject.Entity.ProductEntity;
+
+@Controller
+public class ProductController {
+	
+	@GetMapping("/product")
+	@ResponseBody
+	public ProductEntity getProductDetails() {
+		ProductEntity product = new ProductEntity("Tv" , 2, "20000" );
+		return product;
+	}
+
+}

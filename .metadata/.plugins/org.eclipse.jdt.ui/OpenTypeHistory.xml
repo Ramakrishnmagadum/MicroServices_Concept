@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<typeInfoHistroy>
+<typeInfo handle="=EurekaDemo/C:\/Users\/ramakrishnamagadum.k\/.m2\/repository\/org\/springframework\/cloud\/spring-cloud-netflix-eureka-server\/2.2.1.RELEASE\/spring-cloud-netflix-eureka-server-2.2.1.RELEASE.jar&lt;org.springframework.cloud.netflix.eureka.server(EurekaServerAutoConfiguration.class[EurekaServerAutoConfiguration" modifiers="33" timestamp="1757297229029"/>
+<typeInfo handle="=AddressProject/C:\/Users\/ramakrishnamagadum.k\/.m2\/repository\/com\/netflix\/eureka\/eureka-core\/1.9.13\/eureka-core-1.9.13.jar&lt;com.netflix.eureka.registry(PeerAwareInstanceRegistryImpl.class[PeerAwareInstanceRegistryImpl" modifiers="33" timestamp="1757297238321"/>
+<typeInfo handle="=HotelService/src\/main\/java&lt;com.HotelService.Services{HotelServiceImpl.java[HotelServiceImpl" modifiers="1" timestamp="1757835969595"/>
+</typeInfoHistroy>

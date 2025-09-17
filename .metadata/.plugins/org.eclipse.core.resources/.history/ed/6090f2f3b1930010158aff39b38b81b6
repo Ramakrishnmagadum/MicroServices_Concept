@@ -1,0 +1,4 @@
+app:
+  message: this is Common Config Server Project
+  version: 1.0.0
+  description: This is a common  Service pulling config from Git.

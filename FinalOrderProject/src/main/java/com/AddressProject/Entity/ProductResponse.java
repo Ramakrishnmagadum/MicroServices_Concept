@@ -1,0 +1,29 @@
+package com.AddressProject.Entity;
+
+public class ProductResponse {
+	private String productName;
+	private int noOfProducts;
+	private String price;
+	
+	
+	public String getProductName() {
+		return productName;
+	}
+	public void setProductName(String productName) {
+		this.productName = productName;
+	}
+	public int getNoOfProducts() {
+		return noOfProducts;
+	}
+	public void setNoOfProducts(int noOfProducts) {
+		this.noOfProducts = noOfProducts;
+	}
+	public String getPrice() {
+		return price;
+	}
+	public void setPrice(String price) {
+		this.price = price;
+	}	
+	
+
+}

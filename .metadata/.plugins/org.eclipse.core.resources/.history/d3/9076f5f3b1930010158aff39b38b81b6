@@ -1,0 +1,4 @@
+app:
+  message: Message from User Service Project
+  version: 1.0.0
+  description: This is a dummy User Service pulling config from Git.

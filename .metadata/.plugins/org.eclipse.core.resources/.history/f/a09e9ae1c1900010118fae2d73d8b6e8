@@ -1,0 +1,5 @@
+package com.MicroUserService.Service;
+
+public class UserService {
+
+}

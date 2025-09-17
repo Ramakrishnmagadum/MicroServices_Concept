@@ -1,0 +1,21 @@
+package com.AddressProject.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.AddressProject.Entity.ProductResponse;
+
+@Service
+public class OrderService {
+
+	@Autowired
+	private RestTemplate template;
+	
+//	Connectiog to the ProductService with RestTeample Help
+	public ProductResponse getproductDetails() {
+		
+		ProductResponse Product = template.getForObject("http://localhost:8001/product-app/product", ProductResponse.class);
+		return Product;
+	}
+}

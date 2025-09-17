@@ -1,0 +1,5 @@
+package com.AddressProject.Entity;
+
+public class ProductResponse {
+
+}

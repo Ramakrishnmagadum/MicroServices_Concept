@@ -1,0 +1,5 @@
+package com.AddressProject.FeignClient;
+
+public class ProductServiceFeignClient {
+
+}

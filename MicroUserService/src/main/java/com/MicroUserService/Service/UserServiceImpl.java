@@ -1,0 +1,68 @@
+package com.MicroUserService.Service;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.MicroUserService.Entites.Hotel;
+import com.MicroUserService.Entites.Rating;
+import com.MicroUserService.Entites.User;
+import com.MicroUserService.Exception.ResourceNotFoundException;
+import com.MicroUserService.FeignClient.HotelFeignClient;
+import com.MicroUserService.FeignClient.RatingFeignClient;
+import com.MicroUserService.Repository.UserRepository;
+
+@Service
+public class UserServiceImpl implements UserService{
+	
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	RatingFeignClient ratingFeignClient;
+	
+	@Autowired
+	HotelFeignClient hotelFeignClient;
+	
+	@Override
+	public User saveUser(User user) {
+		String userId= UUID.randomUUID().toString();
+		user.setUserId(userId);
+		return userRepository.save(user);
+	}
+
+	@Override
+	public List<User> getAllUser() {
+		 List<User> userList = userRepository.findAll();
+		 
+		 for(User user : userList) {
+			 List<Rating> ratingsList =ratingFeignClient.getRatingUserId(user.getUserId()).getBody();
+			//Adding the Hotels as well 
+				for(Rating rating : ratingsList) {
+					Hotel hotel = hotelFeignClient.getHotelById(rating.getHotelId()).getBody();
+					rating.setHotel(hotel);
+				}
+				user.setRatings(ratingsList);
+		 }
+		 
+		 return userList;
+	}
+
+	@Override
+	public User getUser(String userId) {
+		User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User is not found for this ID "+ userId));
+		List<Rating> ratingsList =ratingFeignClient.getRatingUserId(userId).getBody();
+		
+		//Adding the Hotels as well 
+		for(Rating rating : ratingsList) {
+			Hotel hotel = hotelFeignClient.getHotelById(rating.getHotelId()).getBody();
+			rating.setHotel(hotel);
+		}
+		user.setRatings(ratingsList);
+		
+		return user;
+	}
+
+}

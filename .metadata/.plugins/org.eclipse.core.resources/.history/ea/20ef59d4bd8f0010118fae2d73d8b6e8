@@ -1,0 +1,16 @@
+package com.AddressProject.Controller;
+
+import org.springframework.stereotype.Controller;
+
+import com.AddressProject.Entity.ProductEntity;
+
+@Controller
+public class ProductController {
+	
+	
+	public ProductEntity getProductDetails() {
+		ProductEntity product = new ProductEntity("Tv" , 2, "20000" );
+		return product;
+	}
+
+}

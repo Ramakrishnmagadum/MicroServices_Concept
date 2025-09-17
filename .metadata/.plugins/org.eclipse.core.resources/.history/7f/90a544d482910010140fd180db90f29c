@@ -1,0 +1,5 @@
+package com.MicroUserService.FeignClient;
+
+public class UserFeignClient {
+
+}

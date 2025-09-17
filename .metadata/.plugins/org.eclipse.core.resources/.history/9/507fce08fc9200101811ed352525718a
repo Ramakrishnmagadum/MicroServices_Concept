@@ -1,0 +1,25 @@
+package com.APIGatewayProject;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+
+
+//@EnableDiscoveryClient   ---> On MainClass add this annotations....
+//-------What it does---------
+//Marks a Spring Boot application as a Discovery Client.
+//This means the service will register itself with a service registry (like Eureka, Consul, or Zookeeper) and can also discover other services from the registry.
+//--------Difference: @EnableDiscoveryClient vs @EnableEurekaClient----------
+//@EnableEurekaClient → Specific to Eureka only.
+//@EnableDiscoveryClient → More generic (works with Eureka, Consul, Zookeeper).
+//Most projects just use @EnableDiscoveryClient for flexibility.
+
+@SpringBootApplication
+@EnableDiscoveryClient   //What is this Annotation.. 
+public class ApiGatewayProjectApplication {
+
+	public static void main(String[] args) {
+		SpringApplication.run(ApiGatewayProjectApplication.class, args);
+	}
+
+}

@@ -1,0 +1,17 @@
+package com.AddressProject.Controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+
+import com.AddressProject.Entity.ProductEntity;
+
+@Controller
+public class ProductController {
+	
+	@GetMapping("/product")
+	public OrderEntity getProductDetails() {
+		OrderEntity product = new OrderEntity("Tv" , 2, "20000" );
+		return product;
+	}
+
+}

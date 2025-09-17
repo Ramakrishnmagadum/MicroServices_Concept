@@ -1,0 +1,4 @@
+app:
+  message: Message from Hotel Service Project
+  version: 1.0.0
+  description: This is a dummy Hotel Service pulling config from Git.

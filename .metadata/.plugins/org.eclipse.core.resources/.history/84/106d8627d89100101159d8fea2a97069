@@ -1,0 +1,24 @@
+package com.MicroUserService.FeignClient;
+
+import java.util.List;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import com.HotelService.Entities.Hotel;
+import com.MicroUserService.Entites.Rating;
+
+@FeignClient(name = "RatingService")
+public interface RatingFeignClient {
+
+	// get Rating By UserId
+	@GetMapping("/rating-service/ratings/users/{userId}")
+	public ResponseEntity<List<Rating>> getRatingUserId(@PathVariable("userId") String userId);
+
+	// get Hotel by Hotel Id
+	@GetMapping("{hotelId}")
+		public ResponseEntity<Hotel> getHotelById(@PathVariable("hotelId")String hotelId);
+
+}

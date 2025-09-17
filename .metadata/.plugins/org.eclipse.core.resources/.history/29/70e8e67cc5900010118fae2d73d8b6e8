@@ -1,0 +1,17 @@
+package com.MicroUserService.Exception;
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import com.MicroUserService.Payload.ApiExceptionResponse;
+
+//This will handle the Exception over the Project ...
+//Means it will handle the Exception Globally.....
+@RestControllerAdvice
+public class GlobalExceptionHandler {
+	
+	public ResponseEntity<ApiExceptionResponse> handlerResourceNotFoundException(){
+		
+	}
+
+}

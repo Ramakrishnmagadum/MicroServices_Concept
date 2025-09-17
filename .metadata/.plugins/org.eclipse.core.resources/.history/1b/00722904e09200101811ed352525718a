@@ -1,0 +1,22 @@
+spring.application.name=APIGatewayProject
+
+#Explanation Of API Gateway
+#spring.cloud.gateway.routes   -->This section defines routing rules for the API Gateway.
+
+#A unique identifier for this route (used internally, good for debugging/logging)
+spring.cloud.gateway.routes[0].id=Micro-UserService
+
+# lb:// = LoadBalancer.
+# Tells Gateway to forward requests to the service named USER-SERVICE in the Eureka service registry.
+# If multiple instances of USER-SERVICE exist, Gateway will load balance between them.
+spring.cloud.gateway.routes[0].uri=lb://MicroUserServiceE
+
+# A predicate defines when this route is applied.
+# Here: if the request path starts with /users/ (like /users/123), it will be routed to USER-SERVICE.
+spring.cloud.gateway.routes[0].predicates[0]=Path=/users/**
+
+logging.level.org.springframework.cloud.gateway=DEBUG
+logging.level.reactor.netty.http.client=DEBUG
+logging.level.reactor.netty.http.server=DEBUG
+
+

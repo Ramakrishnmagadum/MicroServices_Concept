@@ -1,0 +1,45 @@
+package com.MicroUserService.Service;
+
+import java.util.List;
+import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.MicroUserService.Entites.Rating;
+import com.MicroUserService.Entites.User;
+import com.MicroUserService.Exception.ResourceNotFoundException;
+import com.MicroUserService.FeignClient.RatingFeignClient;
+import com.MicroUserService.Repository.UserRepository;
+
+@Service
+public class UserServiceImpl implements UserService{
+	
+	@Autowired
+	private UserRepository userRepository;
+
+	@Autowired
+	RatingFeignClient ratingFeignClient;
+	
+	@Override
+	public User saveUser(User user) {
+		String userId= UUID.randomUUID().toString();
+		user.setUserId(userId);
+		return userRepository.save(user);
+	}
+
+	@Override
+	public List<User> getAllUser() {
+		return userRepository.findAll();
+	}
+
+	@Override
+	public User getUser(String userId) {
+		User user = userRepository.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User is not found for this ID "+ userId));
+		List<Rating> rating =ratingFeignClient.getRatingUserId(userId).getBody();
+		user.setRatings(rating);
+		//For this User add the Ratings also 
+		return user;
+	}
+
+}

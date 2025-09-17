@@ -1,0 +1,16 @@
+spring.application.name=ProductProject
+
+
+server.port=8000
+#Setting the Context Root Path
+server.servlet.context-path=/product-app
+
+#To make Fetch Operation as 'flase" so it won't look or won't try to fecth..
+eureka.client.fetch-registry=false
+
+#This tells Spring Cloud not to register the current application as a client in Eureka.
+eureka.client.register-with-eureka=false
+
+
+#It is the address of the Eureka Server that all Eureka Clients use to register and discover services.
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/

@@ -1,0 +1,5 @@
+package com.MicroUserService.Entites;
+
+public class Rating {
+
+}
