@@ -1,8 +1,0 @@
-package com.AddressProject.FeignClient;
-
-import org.springframework.cloud.openfeign.FeignClient;
-
-@FeignClient
-public interface ProductServiceFeignClient {
-
-}

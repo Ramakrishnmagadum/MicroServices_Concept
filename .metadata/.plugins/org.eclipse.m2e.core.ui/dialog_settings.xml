@@ -6,6 +6,7 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="D:\Workspace\MiniServices\ConfigServerService"/>
 			<item value="D:\Workspace\MiniServices\APIGatewayProject"/>
 			<item value="D:\Workspace\MiniServices\Micro_ServiceDiscovery"/>
 			<item value="D:\Workspace\MiniServices\RatingService"/>

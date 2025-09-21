@@ -1,5 +1,0 @@
-package com.MicroUserService.Payload;
-
-public class ApiExceptionResponse {
-
-}
