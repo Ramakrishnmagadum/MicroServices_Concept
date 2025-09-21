@@ -1,5 +1,0 @@
-package com.HotelService.Exception;
-
-public class GlobalExceptionHandler {
-
-}
