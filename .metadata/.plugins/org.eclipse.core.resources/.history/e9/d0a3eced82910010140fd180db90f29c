@@ -1,8 +1,0 @@
-package com.MicroUserService.FeignClient;
-
-import org.springframework.cloud.openfeign.FeignClient;
-
-@FeignClient(name="RatingService")
-public interface RatingFeignClient {
-
-}

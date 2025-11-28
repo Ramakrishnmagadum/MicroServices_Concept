@@ -6,6 +6,10 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="D:\Workspace\MiniServices\ReactiveAPIExample"/>
+			<item value="D:\Workspace\MiniServices\Spring-Reactive-Web-3"/>
+			<item value="D:\Workspace\MiniServices\Spring-Reactive-Web-02"/>
+			<item value="D:\Workspace\MiniServices\Spring-Reactive-Web-01"/>
 			<item value="D:\Workspace\MiniServices\RESTAPIConectNegotiation"/>
 			<item value="D:\Workspace\MiniServices\ConfigServerService"/>
 			<item value="D:\Workspace\MiniServices\APIGatewayProject"/>
@@ -17,7 +21,6 @@
 			<item value="D:\Workspace\MiniServices\EmployeeProject"/>
 			<item value="D:\Workspace\MiniServices\AddressProject"/>
 			<item value="D:\Workspace\MiniServices\First_Employee_Layer"/>
-			<item value="D:\Workspace\MiniServices\First_Customer_Layer"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
