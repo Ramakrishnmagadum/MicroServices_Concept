@@ -1,0 +1,539 @@
+------------------    ZooKepper  Notes   ---------------------------
+What is ZooKeeper?
+ZooKeeper is a distributed coordination service used by Kafka (before version 4.0) to store cluster metadata and help manage the Kafka cluster.
+
+Think of ZooKeeper as:
+👉 Kafka’s manager + coordinator + cluster brain
+       Kafka brokers = workers
+       ZooKeeper = supervisor
+
+Why Kafka needed ZooKeeper (before KRaft)
+ZooKeeper handled all critical cluster metadata that brokers could not coordinate themselves.
+ZooKeeper kept track of:
+        Which broker is alive?
+        Which broker is the controller?
+        Who is leader of each partition?
+        What are ISR replicas?
+        Topic metadata (topics, partitions, configs)
+		
+What ZooKeeper Does in Kafka (Important Functions):--
+1. Broker Registration
+When a Kafka broker starts, it registers itself with ZooKeeper.
+ZooKeeper stores:
+    Broker ID
+    IP address
+    Port
+    Configs
+So ZooKeeper always knows who is alive.
+
+2. Controller Election
+In Kafka cluster, one broker becomes controller.
+Controller is responsible for:
+    Leader election for partitions
+    Assigning replicas
+    Handling broker failures
+
+ZooKeeper elects this controller.
+If the controller broker crashes → ZooKeeper picks another one.
+
+3. Leader Election for Partitions
+For each partition, ZooKeeper decides:
+    Which replica becomes leader
+    Which replicas are followers
+Leader handles all messages.
+ZooKeeper ensures only one leader exists for each partition.
+
+4. ISR Management (In-Sync Replicas)
+Kafka replicas that are fully caught up = ISR.
+ZooKeeper keeps track of:
+    ISR list updates
+    When a replica falls behind
+    When a replica rejoins ISR
+If the leader dies → ZooKeeper picks a new leader from ISR.
+
+5. Metadata Storage
+ZooKeeper stores cluster metadata:
+    Topics
+    Number of partitions
+    Replication factor
+    Access control lists
+    Broker configuration overrides
+
+Kafka brokers read/write this metadata using ZooKeeper.
+
+
+------------------    Kafka Notes   ---------------------------
+What is Apache Kafka?
+Apache Kafka is a distributed event streaming platform used to build real-time data pipelines and streaming applications.
+Think of Kafka as a high-performance messaging system that allows different applications to send, store, and receive messages (events) at massive scale.
+
+------Core Concepts in Kafka------
+1. Producer
+         Application that sends messages to Kafka.
+         Example: Payment service publishes "payment_success" event.
+         
+2. Consumer
+         Application that reads messages from Kafka.
+         Example: Notification service receives "payment_success" event and sends an SMS.
+
+3. Topics
+         Category or stream name where messages are stored.
+         Example: "payments", "orders", "logs".
+
+4. Partitions
+         Each topic is split into multiple partitions for parallelism and scaling.
+         Messages in a partition are always ordered.
+
+5. Brokers
+         A Kafka broker is a server.
+         A Kafka cluster = multiple brokers working together.
+
+6. Consumer Group
+         A group of consumers that share the load of processing partitions.
+         Kafka ensures each partition is read by only one consumer in a group.
+
+7. Offset
+         A unique number identifying each message inside a partition.
+         Consumers track offset to know what they have read.
+		 
+
+---------   How Kafka Works (Simple Explanation)   ------------
+Producers publish messages into topics
+→ Kafka stores them in partitions.
+
+Kafka stores data on disk (but very fast)
+→ Uses sequential, append-only writes.
+
+Consumers read at their own speed
+→ Kafka doesn’t delete data immediately after reading.
+
+Consumers track their own offsets
+→ Allows reprocessing data if needed.
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+------------------------   Kafka Architecture — Deep Dive --------------------------
+1️ Kafka Cluster:-
+A Kafka cluster consists of:
+    i.    Kafka Brokers (servers)
+    ii.   ZooKeeper (older versions) or KRaft (new Kafka versions) for metadata and coordination
+    iii.  Producers
+    iv.   Consumers
+    v.    Topics & Partitions
+    vi.   Replication
+    vii.  Offset Storage
+    viii. Controllers
+
+All these components together create a reliable event streaming system.
+
+2️. Kafka Broker:- 
+A broker is a single Kafka server.
+Each broker stores a subset of partitions.
+A cluster typically has 3, 5, or 7 brokers.
+Each broker has a unique ID.
+A broker stores data in topics, and each topic is split into multiple partitions.
+
+3️. Topic and Partitions:-
+✔ A Topic is a logical category
+Example: orders, payments, inventory.
+
+✔ A Topic is split into partitions
+Example:
+orders → 3 partitions
+orders-0
+orders-1
+orders-2
+
+✔ Why partitions?
+    To scale horizontally.
+    To achieve parallelism.
+    To maintain ordering within each partition.
+
+📌 Kafka guarantees ordering only per partition, not across the topic
+
+4️. Partition Leaders & Followers:-
+Each partition has:
+🔹 One Leader
+    Handles all reads/writes.
+    Clients talk only to the leader.
+	
+🔹 Zero or More Followers
+     Replicate data from the leader.
+     Provide failover.
+
+Example (replication factor = 3):
+
+Partition 0:
+  Leader → Broker 1
+  Follower → Broker 2, Broker 3
+  
+5️. Replication (RF = Replication Factor):-
+Used for fault tolerance.
+If RF = 3:
+    1 leader
+    2 followers
+    
+Kafka ensures:
+    Followers pull the log from leader.
+    Followers replicate sequentially.
+    Followers send acknowledgments.
+
+If a leader dies:
+    One of the in-sync followers becomes the new leader.
+
+6️. ISR (In-Sync Replicas):-
+ISR = Replicas that are fully synced with the leader.
+Requirements:
+    Follower must not be too far behind leader.
+    Follower must send regular heartbeats.
+Kafka promotes only ISR members to be leader.
+
+7️. Kafka Controller (The Boss):-
+The controller:
+    Manages broker failures.
+    Performs leader election.
+    Manages partition assignments.
+    Coordinates rebalancing.
+	
+Kafka uses:
+🔸 ZooKeeper → in older versions
+🔸 KRaft (Kafka Raft) → in new versions
+to elect the controller.
+
+8️. Log Storage (Kafka’s secret weapon):-
+Kafka uses append-only logs.
+Each partition is a log file:
+    message0
+    message1
+    message2
+
+Benefits:
+    Very fast sequential disk writes
+    OS page cache optimizations
+    Zero-copy data transfer
+Kafka stores messages as:
+    Batch of messages
+    Offset (long), Key (optional), Value, Timestamp, Header.
+
+9️. Message Retention:-
+Kafka does not delete messages immediately after consumption.
+Retention types:
+⏳ Time-based
+
+Keep messages for 7 days.
+🔢 Size-based
+
+Keep 100 GB per partition.
+🧹 Compaction
+
+Keep only the latest value for each key.
+
+10. Producer Internals:-
+Producers choose:
+✔ Partition
+Using:
+    Round-robin
+    Sticky partitioning
+    Key-based hashing (ensures ordering by key)
+	
+Acknowledgment level (acks setting):-
+| acks | Meaning                    | Durability      |
+| ---- | -------------------------- | --------------- |
+| 0    | No wait                    | Fastest, unsafe |
+| 1    | Leader ack                 | Good            |
+| all  | Leader + ISR followers ack | Safest          |
+
+Producer also manages:
+    retry logic
+    batching
+    compression (snappy, gzip, lz4, zstd).
+	
+11. Consumer Internals:-
+Consumers read from topics using pull mechanism:
+    Kafka does NOT push messages.
+    Consumers request specific batches from partitions.
+
+Consumer Groups
+    A consumer group is a cluster of consumers reading a topic.
+
+Rules:
+    Each partition is assigned to exactly one consumer in a group.
+    Multiple groups can read the same data independently.
+	
+1️2. Offset Management:-
+Offsets can be stored in:
+✔ Kafka internal topic → __consumer_offsets (default)
+✔ Manually in external DB (for custom behavior)
+
+Consumers commit offsets:
+    Automatically
+    Manually
+    Asynchronous commit
+    Synchronous commit
+	
+1️3. Rebalancing:-
+When consumer joins/leaves the group:
+   Kafka reassigns partitions.
+   Controlled by Group Coordinator & Consumer Coordinator.
+   Uses rebalance protocols (Range, RoundRobin, Sticky).
+
+Newer versions use:
+   Incremental cooperative rebalance (very fast)
+   Avoids complete rebalancing
+   
+1️4. KRaft (Kafka Raft Mode) — New Architecture:-
+Kafka is removing ZooKeeper.
+KRaft does:
+   Metadata management
+   Controller election
+   Maintaining cluster state
+   Log replication (Raft)
+
+Benefits:
+   Faster startup
+   Less complexity
+   Better HA
+   Strong consistency  
+   
+1️5. End-to-End Flow Example:-
+A producer publishes to topic orders:
+   Producer finds metadata → gets partition leader
+   Producer sends message to leader
+   Leader appends to log
+   Followers replicate
+   Acks returned to producer
+
+Consumer reads:
+   Consumer pulls messages from leader
+   Processes data
+   Commits offset
+   Rebalance if needed
+   
+-------------------------------------Kafka Architecture Diagram (ASCII)----------------------------------
+                        ┌────────────────────────────────┐
+                        │         Kafka Cluster           │
+                        └────────────────────────────────┘
+                                   /           \
+                                  /             \
+                        ┌─────────────────┐    ┌─────────────────┐
+                        │   Broker 1      │    │   Broker 2      │
+                        │ (Leader / Follower)  │ (Leader / Follower)
+                        └─────────────────┘    └─────────────────┘
+                                  \               /
+                                   \             /
+                        ┌─────────────────┐    ┌─────────────────┐
+                        │   Broker 3      │    │   Broker 4      │
+                        │ (Leader / Follower)  │ (Leader / Follower)
+                        └─────────────────┘    └─────────────────┘
+
+                         ========== Topic: orders ==========
+
+                        ┌──────────────┬──────────────┬──────────────┐
+                        │ Partition 0  │ Partition 1  │ Partition 2  │
+                        │ Leader: B1   │ Leader: B3   │ Leader: B2   │
+                        │ F: B2, B3    │ F: B1, B4    │ F: B1, B3    │
+                        └──────────────┴──────────────┴──────────────┘
+
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │                           Replication (RF=3)                             │
+   │               Each partition replicated across 3 brokers                │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+   ┌─────────────────────────────────────────────────────────────────────────┐
+   │                          Controller Node                                 │
+   │                  (in KRaft or ZooKeeper mode)                            │
+   │  - Manages metadata                                                      │
+   │  - Leader election for partitions                                        │
+   │  - Detects broker failures                                               │
+   │  - Coordinates rebalancing                                               │
+   └─────────────────────────────────────────────────────────────────────────┘
+
+
+                  ┌───────────────────────────────┐
+                  │           Producer             │
+                  │  - Sends messages to topic     │
+                  │  - Chooses partition via key   │
+                  │  - Talks to leader broker      │
+                  └───────────────────────────────┘
+                               |
+                               |  (Write messages)
+                               v
+                        ┌────────────┐
+                        │  Leader    │
+                        │ Partition  │
+                        └────────────┘
+                               |
+                               | (Replicate to followers)
+                               v
+
+   ┌──────────────────────────┬──────────────────────────┬──────────────────────────┐
+   │        Follower 1        │        Follower 2        │        Follower 3        │
+   └──────────────────────────┴──────────────────────────┴──────────────────────────┘
+
+                         <--- ISR: In-Sync Replicas --->
+
+
+                  ┌───────────────────────────────┐
+                  │           Consumer             │
+                  │      (Consumer Group CG1)      │
+                  │ - Pulls messages from brokers  │
+                  │ - Commits offsets              │
+                  │ - Rebalances partitions        │
+                  └───────────────────────────────┘
+                               ^
+                               |   (Read messages)
+                               | 
+                        ┌────────────┐
+                        │ Partition  │
+                        └────────────┘
+
+   ┌────────────────────────────────────────────────────────────┐
+   │      __consumer_offsets  (Internal Kafka Topic)            │
+   │  - Stores committed offsets for each consumer group        │
+   │  - Managed by Group Coordinator                            │
+   └────────────────────────────────────────────────────────────┘
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+--------------   Why ZooKeeper is not required anymore   -------------
+Because Kafka learned to manage itself.
+
+Earlier:    Kafka needed ZooKeeper to coordinate brokers.
+
+Now:  Kafka has KRaft, which replaces ZooKeeper and handles all metadata inside Kafka itself.
+
+So:
+     No separate ZooKeeper cluster needed
+     Faster startup
+     Faster leader election
+     Easier scaling
+     One system to run, not two
+---------------------------------------------------------------------------------------
+To Start Kafka Server Explanation :--
+
+If your using Below 3.6 version of kafka then Zookepper is required , it will act as manager and store the logs and elect the Controller , Leader , follower so on ..
+TO work with this :
+First Run Zookepper :-
+Command :-    zookeeper-server-start.bat C:\kafka_2.13-3.9.0\config\zookeeper.properties
+
+Second Run Kafka Server : (so it will use Zookepper for metadata and management of the Heartbeat , elecetion so on
+command :-    kafka-server-start.bat C:\kafka_2.13-3.9.0\config\server.properties 
+
+
+After Version 4.0.0 ---> Zookepper is not required , zookepper job will done by Kraft ...
+Wihtout Zookepper first time we need to --->
+      Kafka uses an internal metadata log (not ZooKeeper)
+      Each broker stores metadata in the log directories
+      Before the first startup, Kafka needs:
+      A cluster ID (UUID)
+      The log directories to be formatted with this cluster ID
+
+If you skip the formatting, Kafka will show errors like: No metadata log found Storage directory not formatted
+
+
+Step 1: Generate a Cluster ID (random UUID)
+        Run: kafka-storage.bat random-uuid
+        Output will be something like:   K8rGdLf8T8Wmy1RyNbQx1A
+		
+Step 2: Format the Kafka storage directory
+        Use the generated cluster ID and your server.properties:
+        kafka-storage.bat format --cluster-id K8rGdLf8T8Wmy1RyNbQx1A --config config\server.properties
+
+Then Start the kafka server directly (No ZooKepper is required here)
+Command :-  kafka-server-start.bat C:\kafka_2.13-3.9.0\config\kraft\server.properties
+
+----------------------------------------------------------------------------------------------------------
+
+Coomands :-
+1. Start  the Kafka Server with Kraft(No ZooKeeper )
+command :-  kafka-server-start.bat C:\kafka_2.13-3.9.0\config\kraft\server.properties
+
+2. To Create Topic with 2 partitions in that 
+Command:-   kafka-topics.bat --bootstrap-server localhost:9092 --create --topic test --partitions 3
+
+3. List out all the topics which are running on port number 9092.
+Command:-   kafka-topics.bat --bootstrap-server localhost:9092 --list
+
+4. This will describe what are things this topics contains
+Command:-   kafka-topics.bat --bootstrap-server localhost:9092 --describe --topic test
+
+5. This command used Producer When  have multi-Paratitions then it should follow RoundRobin Format 
+command :  kafka-console-producer.bat --bootstrap-server localhost:9092 --topic test   --producer-property     partitioner.class=org.apache.kafka.clients.producer.RoundRobinPartitioner
+
+6. In Consumer to Print data with Paratitions No:
+command :    kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic test  --property print.partition=true
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------With ZooKepper Creating Multiple Kafka Server/Broker -------
+
+To start Zookeeper : zookeeper-server-start.bat C:\kafka_2.13-3.9.0\config\zookeeper.properties
+
+So now we need to start kafka at different different port number so server.properties will make multiples ..and in those files we will change 
+1.  broker.id 
+2.  listeners=PLAINTEXT://:{change the port number}
+3.  log.dirs=/tmp/kafka-logs{append somethings extra so it will unique then default one )....
+
+
+--creating multilpe Kafka Broker/ Server with different different server.properties files(which has different port , logs path and nroker-id )
+command :    kafka-server-start.bat C:\kafka_2.13-3.9.0\config\MultiServerSupport_Server.Properties_Files\server2.properties
+command :    kafka-server-start.bat C:\kafka_2.13-3.9.0\config\MultiServerSupport_Server.Properties_Files\server3.properties
+command :    kafka-server-start.bat C:\kafka_2.13-3.9.0\config\server.properties
+
+this will start 3 kafka server in different nodes 
+
+This command will create topic with 6 paratitions and Each partitions has 3 Replica of it .in that  each partitions has 1 Leader and   2 Copy Or Replica those called as Followers. 
+command :    kafka-topics.bat --bootstrap-server localhost:9092 --create --topic test --partitions 6 --replication-factor 3
+
+Description of the Topic:  kafka-topics.bat --bootstrap-server localhost:9092 --create --topic sravan --partitions 3 --replication-factor 2
+        Topic: sravan   TopicId: 6sB2q6KIS6KCFCt-RSkpAQ PartitionCount: 3       ReplicationFactor: 2    Configs:
+        Topic: sravan   Partition: 0    Leader: 2       Replicas: 2,1   Isr: 2,1        Elr: N/A        LastKnownElr: N/A
+        Topic: sravan   Partition: 1    Leader: 1       Replicas: 1,0   Isr: 1,0        Elr: N/A        LastKnownElr: N/A
+        Topic: sravan   Partition: 2    Leader: 0       Replicas: 0,2   Isr: 0,2        Elr: N/A        LastKnownElr: N/A
+		
+Example :
+If I Started producing the data in ROund -robbin Format , and In Data produced it will thorugh the partition 2 , Then other Broker/Server will help fetch the value..
+
+If i Start Consuming the data from broker-id : 1 , then it has replicas : 1,0  But still it can fetch the data from paratition 2 , Bcz 
+
+
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+------------------- With Kafka Server Creating Multiple Kafka Servers/Brokers -------------------------
+
+
+To start multiple Kafka Broker/Server Inkraft mode --First we need to format storage logs 
+We Need multiple Server.properties with different different Broker Id's:--need to change 
+1. Broker-Id              --(it should be uniqe )
+2. controller.quorum.voters=1@localhost:9093,2@localhost:9095,3@localhost:9097      -(ADD your all controller Details )
+3. listeners=PLAINTEXT://localhost:9092,CONTROLLER://localhost:9093    --(this will tell where our server needs to start 9092 is server port number and 9093 is controler port number )
+4. advertised.listeners=PLAINTEXT://localhost:9092,CONTROLLER://localhost:9093
+5. log.dirs=/tmp/kraft-combined-logs01    --(this is storage logs file name )
+
+if we need 3 broker then we should have 3 server.properties with different broker-id and port numbers:
+
+--this is generating random-uuid (this same uuid need to give for all the query )
+CLUSTER_ID=$(kafka-storage.sh random-uuid)
+
+UUID1=$(kafka-storage.sh random-uuid)
+UUID2=$(kafka-storage.sh random-uuid)
+UUID3=$(kafka-storage.sh random-uuid)
+  
+--------dummy syntax of formatting :-
+Command:-
+ kafka-storage.sh format --cluster-id <CLUSTER_ID> --config /Users/abhilashpanigrahi/kafka_2.13-4.0.0/delete/server1.properties --initial-controllers "1@localhost:9093:UUID1,2@localhost:9095:UUID2,3@localhost:9097:UUID3"
+  
+---------Real Query for formatting 
+kafka-storage.bat format --cluster-id IW44isAdRyK1F7qw-xXyVw --config C:\kafka_2.13-3.9.0\config\kraft\CustomServerProperties\server1.properties --initial-controllers "1@localhost:9093:Kr296Y7aSEe-bwQSRGMlzQ,2@localhost:9095:SGMnkoofQlaInbH0zrWztA,3@localhost:9097:rzj7VEP4SPOn4Lx6GddVOQ"
+
+kafka-storage.bat format --cluster-id IW44isAdRyK1F7qw-xXyVw --config C:\kafka_2.13-3.9.0\config\kraft\CustomServerProperties\server2.properties --initial-controllers "1@localhost:9093:Kr296Y7aSEe-bwQSRGMlzQ,2@localhost:9095:SGMnkoofQlaInbH0zrWztA,3@localhost:9097:rzj7VEP4SPOn4Lx6GddVOQ"
+
+kafka-storage.bat format --cluster-id IW44isAdRyK1F7qw-xXyVw --config C:\kafka_2.13-3.9.0\config\kraft\CustomServerProperties\server3.properties --initial-controllers "1@localhost:9093:Kr296Y7aSEe-bwQSRGMlzQ,2@localhost:9095:SGMnkoofQlaInbH0zrWztA,3@localhost:9097:rzj7VEP4SPOn4Lx6GddVOQ"
+
+
+-----------To start the server 
+kafka-server-start.bat C:\kafka_2.13-3.9.0\config\kraft\CustomServerProperties\server1.properties
+
+kafka-server-start.bat C:\kafka_2.13-3.9.0\config\kraft\CustomServerProperties\server2.properties
+
+kafka-server-start.bat C:\kafka_2.13-3.9.0\config\kraft\CustomServerProperties\server3.properties
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------

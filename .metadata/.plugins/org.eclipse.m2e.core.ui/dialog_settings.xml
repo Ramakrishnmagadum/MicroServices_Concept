@@ -6,6 +6,7 @@
 	</section>
 	<section name="MavenProjectImportWizardPage">
 		<list key="rootDirectory">
+			<item value="D:\Workspace\MiniServices\KafkaExample1"/>
 			<item value="D:\Workspace\MiniServices\ReactiveAPIExample"/>
 			<item value="D:\Workspace\MiniServices\Spring-Reactive-Web-3"/>
 			<item value="D:\Workspace\MiniServices\Spring-Reactive-Web-02"/>
@@ -20,7 +21,6 @@
 			<item value="D:\Workspace\MiniServices\EurekaDemo"/>
 			<item value="D:\Workspace\MiniServices\EmployeeProject"/>
 			<item value="D:\Workspace\MiniServices\AddressProject"/>
-			<item value="D:\Workspace\MiniServices\First_Employee_Layer"/>
 		</list>
 		<list key="projectNameTemplate">
 			<item value="[artifactId]"/>
