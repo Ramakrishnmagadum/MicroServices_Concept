@@ -1,0 +1,5 @@
+spring.application.name=Thread_Per_Request2
+server.port=8083
+
+##This line will force to create only 2 threads as maximum ....
+server.tomcat.max-threads=2

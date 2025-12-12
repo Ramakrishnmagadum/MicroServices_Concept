@@ -1,0 +1,14 @@
+package com.example.virtualThreadExample;
+
+public class VirtualThreadExample2 {
+	public static void main(String[] args) {
+         Thread.ofVirtual().start(() -> Task());
+	}
+	
+	public static void Task() {
+		System.out.println("Thread Started "+ Thread.currentThread().getName());
+		
+		System.out.println("Thread Ended "+ Thread.currentThread().getName());
+		
+	}
+}

@@ -1,0 +1,33 @@
+package com.example.virtualThreadExample;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class VirtualThreadExample {
+	static CountDownLatch countDownLatch2 ;
+	
+//	using CountDown Latch for  wait  upto completion of all virtual threads   
+//	(bcz virtual threads are demon threads ---> main thread won't stop for demon threads to complete their task 
+//	it will try to terminate for that we are using countdown latch to stop main method termination up to all virtual threads creation done ......
+	
+
+	public static void main(String[] args) throws InterruptedException {
+		AtomicInteger atomicInteger2 = new AtomicInteger();
+		int numOfVirtualThreads = 100;
+		countDownLatch2 =new CountDownLatch(numOfVirtualThreads);
+		Long startTime2 = System.currentTimeMillis();
+		for (int i = 0; i < numOfVirtualThreads; i++) {
+			 Thread.ofVirtual().start(() -> Task());
+			atomicInteger2.getAndIncrement();
+		}
+		countDownLatch2.await();
+		Long endTime2 = System.currentTimeMillis();
+		System.out.println("Virtual  Threads taken Time " + (endTime2 - startTime2) + " MiliSeconds");
+		System.out.println("No of Threads are created " + atomicInteger2);
+	}
+	
+	public static void Task() {
+//		System.out.println("Start Thread " + Thread.currentThread().getName());
+		countDownLatch2.countDown();
+	}
+}

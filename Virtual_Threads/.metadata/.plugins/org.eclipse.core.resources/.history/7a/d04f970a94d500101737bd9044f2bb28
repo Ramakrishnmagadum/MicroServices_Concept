@@ -1,0 +1,24 @@
+package com.example.virtualThreadExample;
+
+public class VirtualThreadExample2 {
+	public static void main(String[] args) throws InterruptedException {
+		//Started the Virtual Thread 
+         Thread virtualThread = Thread.ofVirtual().start(() -> Task());
+         virtualThread.join();
+	}
+	
+	public static void Task() {
+		System.out.println("Thread Started "+ Thread.currentThread());
+		
+		//Here current Thread will park for 1 second then it will start executing after 1 second completes ...
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		//Checking is the same Thread is executing after park or not ...
+		//yes here again same thread is executing after wait relase ....
+		System.out.println("Thread Ended "+ Thread.currentThread());
+		
+	}
+}

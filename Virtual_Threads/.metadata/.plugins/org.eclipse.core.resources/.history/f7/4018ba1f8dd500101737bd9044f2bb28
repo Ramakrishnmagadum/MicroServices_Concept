@@ -1,0 +1,49 @@
+package com.example.virtualThreadExample;
+
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class DifferencingInTime {
+	static CountDownLatch countDownLatch2 ;
+	public static void main(String[] args) throws InterruptedException {
+
+		// Creating Platform Threads :-
+		// Here Platform Threads are not demon Threads so main method will wait for all
+		// other threads to complete thier task ..
+//		int numOfThreads = 1000;
+//		countDownLatch2 =new CountDownLatch(numOfThreads);
+//		AtomicInteger atomicInteger= new AtomicInteger();
+//		Long startTime = System.currentTimeMillis();
+//		for (int i = 0; i < numOfThreads; i++) {
+//			//this way also we can create platform threads or normal Threads ........
+//			Thread platform = Thread.ofPlatform().unstarted(() -> Task());
+//			platform.start();
+//			atomicInteger.getAndIncrement();
+//		}
+//		countDownLatch2.await();
+//		Long endTime = System.currentTimeMillis();
+//		System.out.println("Platform Threads taken Time " + (endTime - startTime) + " MiliSeconds");
+//		System.out.println("No of Threads are created "+ atomicInteger);
+
+		System.out.println("________________________________________________");
+		AtomicInteger atomicInteger2 = new AtomicInteger();
+		int numOfVirtualThreads = 1000;
+		countDownLatch2 =new CountDownLatch(numOfVirtualThreads);
+		Long startTime2 = System.currentTimeMillis();
+		for (int i = 0; i < numOfVirtualThreads; i++) {
+			Thread virtualThread = Thread.ofVirtual().unstarted(() -> Task());
+			virtualThread.start();
+			atomicInteger2.getAndIncrement();
+		}
+		countDownLatch2.await();
+		Long endTime2 = System.currentTimeMillis();
+		System.out.println("Virtual  Threads taken Time " + (endTime2 - startTime2) + " MiliSeconds");
+		System.out.println("No of Threads are created " + atomicInteger2);
+
+	}
+
+	public static void Task() {
+		System.out.println("Start Thread " + Thread.currentThread().getName());
+		countDownLatch2.countDown();
+	}
+}

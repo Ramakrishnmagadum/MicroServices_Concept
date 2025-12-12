@@ -1,0 +1,87 @@
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------
+-------------    virtual thread    ---------------
+What Is a Virtual Thread??
+A virtual thread is a very lightweight thread in Java that lets your program handle thousands or even millions of tasks at the same time without using a lot of memory.
+It behaves like a normal thread, but it is not tied to an operating system (OS) thread.
+Instead, the JVM manages it, making it extremely cheap to create and run.
+
+A virtual thread is a thread that:
+     Is managed by the JVM, not the OS.
+     Uses very little memory.
+     Lets you create millions of threads easily.
+     Works with blocking code (e.g., JDBC, HTTP calls) without blocking OS threads.
+-----------------------------------------------------
+Why Do We Need Virtual Threads?
+Traditional Java threads (platform threads):
+     Are heavy
+     Require OS resources
+     Can support only a few thousand threads
+     Blocking code (like Thread.sleep(), JDBC calls, file I/O) wastes the OS thread
+	 
+What Virtual Threads Do???
+Virtual threads allow:
+     Millions of concurrent tasks
+     You to write simple blocking code (instead of async callbacks)
+     Better scalability with less memory
+     Faster I/O operations
+-----------------------------------------------------
+When Should You Use Virtual Threads?
+Best for:
+     Web servers / HTTP requests
+     Database I/O (JDBC)
+     Microservices
+     Message processing
+     High-concurrency applications
+
+Not ideal for:
+     CPU-intensive work (use normal threads or ForkJoinPool)
+-----------------------------------------------------
+What is Carrier Thread?
+Carrier thread are platform thread only , which are running the virtual thread or mounted with virtual thread are called carrier thread....
+
+
+What is a Platform Thread?
+A platform thread is the regular, traditional Java thread
+It is:
+        Mapped directly to an OS thread
+        Heavyweight
+        Requires a large memory stack (1–2 MB)
+        Limited in number (usually a few thousand max)
+        Expensive to create and switch between
+		
+-----------------Key Differences: Platform Thread vs Virtual Thread:-----------------
+
+| Feature              | Platform Thread              | Virtual Thread                          |
+| -------------------- | ---------------------------- | --------------------------------------- |
+| Backed By            | OS thread                    | JVM continuation (runs *on* OS threads) |
+| Managed By           | Operating System             | JVM                                     |
+| Memory per thread    | ~1–2 MB                      | ~few KB (dynamic stack)                 |
+| Max possible threads | Thousands                    | Millions                                |
+| Cost to create       | Expensive                    | Very cheap                              |
+| Cost of blocking I/O | Blocks OS thread → expensive | JVM parks thread → cheap                |
+| Scalability          | Low                          | Extremely high                          |
+
+Usage Difference
+Platform threads → Best for:
+       CPU-bound tasks
+       Parallel computation
+       Workloads that don't block often
+
+Virtual threads → Best for:
+       Network I/O (API calls)
+       Database calls
+       High concurrency tasks (like 100K requests)
+       Microservices
+       Servers (Spring Boot, Tomcat, Jetty)
+--------------------------------------------------------------------------------
+
+---------CPU-bound V/S I/O-bound:---------	   
+CPU Bound :- Example if we are running for loop for 1000 times or doing task for multiple times this is CPU Bound
+Because :- here continuosly work is happing . means CPU is processing some work no wating for anything ...this is called CPU Bound ....
+
+I/O Bound : Example if we are building  DataBase connection or connecting other microservices through Network mode .....
+then our thread is actually waiting for result . so this type are called I/O Bound 
+
+CPU Bound Type --> Platform Threads are good to use
+I/O Bound Type --> Virtual Threads are good to use ....
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------

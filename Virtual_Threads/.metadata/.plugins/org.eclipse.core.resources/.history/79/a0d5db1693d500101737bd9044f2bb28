@@ -1,0 +1,21 @@
+package com.example.virtualThreadExample;
+
+public class VirtualThreadExample2 {
+	public static void main(String[] args) throws InterruptedException {
+		//Started the Virtual Thread 
+         Thread virtualThread = Thread.ofVirtual().start(() -> Task());
+         virtualThread.join();
+	}
+	
+	public static void Task() {
+		System.out.println("Thread Started "+ Thread.currentThread());
+		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Thread Ended "+ Thread.currentThread());
+		
+	}
+}

@@ -1,0 +1,2 @@
+spring.application.name=Thread_Per_Request1
+server.port=8082

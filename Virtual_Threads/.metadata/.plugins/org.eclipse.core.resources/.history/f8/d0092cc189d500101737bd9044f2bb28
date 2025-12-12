@@ -1,0 +1,22 @@
+package com.example.virtualThreadExample;
+
+public class DifferencingInTime {
+	public static void main(String[] args) {
+
+		// Creating Platform Threads :-
+		int numOfThreads = 1000;
+		
+		Long startTime = System.currentTimeMillis();
+		for (int i = 0; i < numOfThreads; i++) {
+			Thread.ofPlatform().unstarted(() -> Task());
+		}
+		Long endTime = System.currentTimeMillis();
+		System.out.println("Platform Threads taken Time "+ (endTime-startTime)+" MiliSeconds");
+	}
+
+	public static void Task() {
+		System.out.println("Start Thread " + Thread.currentThread().getName());
+
+		System.out.println("End Thread " + Thread.currentThread().getName());
+	}
+}

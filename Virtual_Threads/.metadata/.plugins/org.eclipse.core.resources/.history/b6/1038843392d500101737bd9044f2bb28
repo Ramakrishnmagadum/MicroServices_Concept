@@ -1,0 +1,7 @@
+package com.example.virtualThreadExample;
+
+public class VirtualThreadExample2 {
+public static void main(String[] args) {
+	
+}
+}

@@ -1,0 +1,56 @@
+package com.example.virtualThreadExample;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class VirtualThreadExample2 {
+	public static void main(String[] args) throws InterruptedException {
+		// Started the Virtual Thread
+//		Thread virtualThread = Thread.ofVirtual().start(() -> Task());
+//		virtualThread.join();
+
+		
+		List<Thread> threadList = new ArrayList<>();
+		for (int i = 0; i < 15; i++) {
+			Thread virtualThread2 = Thread.ofVirtual().start(() -> Task2());
+			threadList.add(virtualThread2);
+	         
+		}
+		
+		for(Thread thread : threadList) {
+			thread.join();
+		}
+	}
+
+	public static void Task() {
+		System.out.println("Thread Started " + Thread.currentThread());
+
+		// Here current Thread will park for 1 second then it will start executing after
+		// 1 second completes ...
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// Checking is the same Thread is executing after park or not ...
+		// yes here again same thread is executing after wait relase ....
+		System.out.println("Thread Ended " + Thread.currentThread());
+
+	}
+
+	public static void Task2() {
+		System.out.println("Thread Started " + Thread.currentThread());
+
+		// Here current Thread will park for 1 second then it will start executing after
+		// 1 second completes ...
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		// Checking is the same Thread is executing after park or not ...
+		// If more than one virtual threads are present then it will change ...
+		System.out.println("Thread Ended " + Thread.currentThread());
+
+	}
+}
