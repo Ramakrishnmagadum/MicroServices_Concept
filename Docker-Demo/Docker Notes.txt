@@ -1,0 +1,759 @@
+What is a Virtual Machine :-
+A Virtual Machine (VM) is a software-based computer that behaves like a real physical computer. It runs an operating system and applications just like a normal machine, but it exists inside another computer.
+
+A Virtual Machine (VM) is a fully isolated software environment that:
+       Behaves like a real physical computer
+       Has its own operating system
+       Has virtual CPU, RAM, disk, and network
+       Runs on top of a hypervisor
+Each VM is independent of others.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+1. What is Docker?
+Docker is a platform that:
+      Creates
+      Packages
+      Runs applications as containers
+A container is a lightweight, isolated environment for an application.
+
+2. Core Idea of Docker:-  “Build once, run anywhere”
+Docker packages:
+      Application code
+      Libraries
+      Runtime
+      Environment variables
+But not the operating system kernel.
+
+3. Docker Architecture:-
+  a) Host Operating System
+      Must be Linux kernel (native containers)
+      Windows/macOS use a Linux VM internally
+
+  b) Docker Engine
+    Docker Engine is the runtime that:
+      Builds images
+      Runs containers
+      Manages networking & storage
+	
+  c) Docker Image
+    Definition: A Docker image is a read-only template used to create containers.
+    Characteristics:
+      Layered
+      Immutable
+      Reusable
+
+  d) Docker Container
+    Definition:  A container is a running instance of an image.
+    Characteristics:
+      Lightweight
+      Fast startup
+      Isolated processes
+      Shares kernel
+
+4. How Docker Provides Isolation:-
+In Docker, isolation is the practice of running an application's process in an environment that is separated from the host operating system and other containers. This ensures that each container operates as an independent entity with its own resources, file system, and network. 
+
+How Docker Achieves Isolation:-
+      Docker leverages specific features of the Linux kernel to provide this isolation in a lightweight manner, as containers are essentially isolated processes running on a shared host kernel. 	 
+
+The primary mechanisms are:
+     Namespaces: These provide an isolated view of system resources. Each container gets its own:
+           i.     PID (Process ID) Namespace: Prevents processes in one container from seeing or interfering with processes in another container or on the host. Inside a container, its main process is PID 1.
+           ii.    NET (Network) Namespace: Provides a separate network stack, including its own network interfaces, IP addresses, and firewall rules.
+           iii.   MNT (Mount) Namespace: Creates an independent filesystem view, so containers cannot access or modify the host's filesystem directly.
+           iv.    UTS (UNIX Time-sharing System) Namespace: Allows a container to have its own hostname and domain name.
+           v.     IPC (Interprocess Communication) Namespace: Isolates interprocess communication resources.
+           vi.    USER Namespace: Allows containers to have a separate mapping of user/group IDs from the host.
+           vii.   Control Groups (cgroups): These manage and limit the resources (CPU, memory, disk I/O, etc.) that a container can consume, which prevents a single container from monopolizing all system resources and affecting other operations. 
+
+Key Benefits
+     Security: Isolation helps prevent a compromised or malicious container from affecting other containers or the host system.
+     Consistency: The self-contained nature ensures applications run consistently across different environments (development, testing, production).
+     Conflict Prevention: Applications with conflicting dependencies or port requirements can run simultaneously on the same host without issues.
+     Predictable Performance: Resource isolation ensures containers have their allocated resources, leading to more predictable performance. 
+	 
+5. Container Lifecycle (Theory)
+    Image is created
+    Container starts
+    Application runs as a process
+    Container stops or is removed
+No OS boot process occurs.               
+
+6. Resource Management in Docker
+    Resources are shared dynamically
+    No fixed RAM reservation
+    Efficient utilization
+Multiple containers can run where one VM might fit.
+
+7. Advantages of Docker
+    Extremely lightweight
+    Fast startup
+    High scalability
+    Ideal for microservices
+    Dev–Prod consistency
+
+10. Limitations of Docker
+    Kernel sharing limits OS diversity
+    Weaker isolation
+    Not ideal for legacy apps
+    Requires container-aware design
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Difference between virtual machince V/s Docker:-
+
+Docker and Virtual Machines are both technologies used to run applications in isolated environments. However, they differ fundamentally in how they provide isolation, how resources are used, and how applications are deployed.
+
+1. Definition
+Virtual Machine (VM):-
+A Virtual Machine is a software-based computer that virtualizes hardware. Each VM runs a complete operating system (guest OS) on top of a hypervisor, along with the required applications.
+
+Docker:-
+Docker is a containerization platform that virtualizes the operating system. It runs applications in containers that share the host OS kernel, packaging only the application and its dependencies.
+
+2. Level of Virtualization
+    Virtual Machine: Hardware-level virtualization
+    Docker: Operating system-level virtualization
+VMs emulate physical hardware, whereas Docker isolates applications at the OS level.
+
+3. Architecture
+Virtual Machine Architecture:-
+      Hardware
+       └── Host OS
+            └── Hypervisor
+                 └── Guest OS
+                     └── Applications
+					 
+Docker Architecture:-
+    Hardware
+     └── Host OS
+         └── Docker Engine
+             └── Containers
+                 └── Applications
+
+4. Operating System and Kernel
+Virtual Machine:-
+    Each VM has its own OS
+    Each OS has a separate kernel
+    Can run different operating systems on the same host
+
+Docker:-
+    Containers do not have a full OS
+    All containers share the host kernel
+    OS must be compatible with the host OS
+
+5. Resource Utilization
+    VMs allocate fixed resources (CPU, RAM, disk)
+    Docker containers share resources dynamically
+VMs consume more memory and storage, while Docker containers are lightweight.
+
+6. Performance
+    Virtual Machines: Slightly slower due to OS and hypervisor overhead
+    Docker: Near-native performance since there is no extra OS layer
+
+7. Startup Time
+    Virtual Machine: Takes minutes to boot (OS startup)
+    Docker: Starts in seconds (process startup)
+	
+8. Scalability
+    VM scaling: Slow and resource-intensive
+    Docker scaling: Fast and efficient
+	
+11. Use Cases
+Virtual Machines:-
+    Legacy applications
+    Multiple OS requirements
+    High-security workloads
+
+Docker:-
+    Microservices
+    CI/CD pipelines
+    Cloud and DevOps environments
+	
+12. Cost Efficiency
+    VMs: Higher infrastructure cost
+    Docker: Better resource utilization and lower cost
+	
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Notes 2:-
+What is Virtualization?
+Definition:--
+Virtualization is a technology that allows one physical computer (hardware) to behave like multiple independent computers by creating virtual versions of computing resources such as:
+    Servers
+    Operating Systems
+    Storage
+    Networks
+
+👉 In simple words:   Virtualization = Running multiple computers on one physical machine
+
+🖥️ Without Virtualization
+    One physical server
+    One operating system
+    Hardware mostly underutilized
+
+❌ Wasted CPU, RAM, Storage
+❌ High cost
+❌ Difficult to scale
+
+🖥️ With Virtualization
+    One physical server
+    Multiple Virtual Machines
+    Each VM runs its own OS and applications
+
+✅ Better resource utilization
+✅ Cost-effective
+✅ Easy scaling and management
+
+What is a Virtual Machine (VM)?
+ Definition:-  A Virtual Machine (VM) is a software-based computer that behaves like a real physical computer.
+
+Each VM has:
+    Virtual CPU
+    Virtual RAM
+    Virtual Hard Disk
+    Virtual Network Card
+    Its own Operating System
+👉 A VM runs inside another computer, but works like a separate system.
+
+🔹 Example
+On a Windows laptop, you can run:
+    One VM with Linux
+    Another VM with Windows Server
+All running at the same time.
+
+3️. Key Components of Virtualization
+1️. Host Machine
+    The physical machine
+    Contains real CPU, RAM, Disk, Network
+
+2️. Host Operating System
+    OS installed on physical machine
+    (Example: Windows, Linux)
+
+3️. Hypervisor (Very Important)
+    Software that creates and manages VMs
+    Acts as a bridge between hardware and VMs
+
+4️. Guest Operating System
+    OS installed inside the VM
+    (Example: Ubuntu, CentOS, Windows Server)
+	
+4️. What is a Hypervisor?
+Definition:-   A Hypervisor is software that allows multiple operating systems to share one physical hardware.
+
+Types of Hypervisors
+🅰️ Type-1 Hypervisor (Bare-Metal)
+    Installed directly on hardware
+    No host OS required
+    Used in production & data centers
+
+Examples:
+    VMware ESXi
+    Microsoft Hyper-V (Server)
+    Xen
+
+Advantages:
+✔ High performance
+✔ High security
+✔ Less overhead
+
+🅱️ Type-2 Hypervisor (Hosted)
+    Installed on top of an OS
+    Used for learning and testing
+
+Examples:
+    VirtualBox
+    VMware Workstation
+    Parallels
+
+Advantages:
+✔ Easy to install
+✔ Beginner-friendly
+
+Disadvantages:
+❌ Slower than Type-1
+❌ Depends on host OS
+
+5️. How Virtualization Works (Step-by-Step)
+    1️. Physical server has CPU, RAM, Disk
+    2️. Hypervisor is installed
+    3️. Hypervisor divides resources
+    4️. Multiple VMs are created
+    5️. Each VM runs its own OS
+    6️. Applications run independently in each VM
+	
+Simple Explanation :-
+
+In our Computer we are having hardware which includes RAM , CPU , Stroage and network everything 
+on top of this hardware we are installed windows Operating System ,this will act as Virtual machine like this we can have  many virtual machines on top of the hardware and each Operating System has its own RAM, CPU,Disk and Network ...........
+Virtual Machine will work independently , each virtual machines doesn't know each other this will act as alone machines .....
+Hypervissor : if we are having multiple virtual machines on top of the hardware then those virtual machines will be managed by this 
+Types of HyperVissor :     
+Type-1:-  installed directly on hardware ..
+Type-2:- On hardware already we are having one Operating System called windows this is now act as Host Os , on top of the Host Os Will install one more Os this called as Type-2 Hypervissor..
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Problem without docker :-
+1. Environment Inconsistency:-
+     Code works on one machine but fails on another.
+     Differences in OS, library versions, runtimes (Java, Python, Node), or system settings cause bugs.
+2. Dependency Conflicts:-      
+3. Difficult Setup for New Developers:-    
+4. No Isolation Between Applications :-
+     Applications share the same system resources and libraries.
+     A change made for one app can break other apps on the same server.
+5. Hard to Scale Applications
+     Scaling means manually:
+           Installing software on new servers
+           Configuring environments again
+     This is slow and inconsistent compared to container-based scaling.
+6. Deployment Issues :-
+7. Poor Portability:-
+9. Resource Wastage
+      Without containers, apps often require separate VMs.
+      VMs are heavy and consume more CPU, RAM, and storage.
+
+Simple Summary
+
+Without Docker:
+      ❌ Inconsistent environments
+      ❌ Dependency conflicts
+      ❌ Slow setup & deployment
+      ❌ Poor scalability and portability
+
+Docker solves these by:
+      Packaging app + dependencies together
+      Providing isolation
+      Making apps portable and consistent everywhere
+
+------------------------------------------------------------------------------------------------
+solution with virtualization:-
+With Virtualization we can have mutilple Operating System , and we can run our application on top of that virtula machine , this virtula machine has all set up and configuration..  this Virtula machine has image we need to just run that image then we can this virtual machine ...it will work 
+no need of any configuration and set up things
+
+But Limitations of Virtualization
+Even though virtualization helps, it has drawbacks:
+     Heavy resource usage (each VM has full OS)
+     Slow startup time
+     Less efficient than containers
+     Higher cost (licenses + hardware)
+
+------------------------------------------------------------------------------------------------
+To Overcome These Limitations → We Use Containerization:--
+What is Containerization?
+Containerization is a technology that packages:
+     Application code
+     Libraries
+     Dependencies
+     Configuration files
+into a lightweight unit called a container.
+
+-----  How Containerization Works  -----
+Containers run on a Container Engine (example: Docker).
+Physical Hardware
+│
+├── Host Operating System
+│
+├── Container Engine (Docker)
+│    ├── Container 1 (App + Libraries)
+│    ├── Container 2 (App + Libraries)
+│    └── Container 3 (App + Libraries)
+
+Here On top of the Hardware one  Operating System will run , this is called as Host OS
+On top of the Host OS -> Container Engine >> on this Container Engine we can run the containers...(container has complete required things in it like code , software , correct version dependencies so on)
+
+How Containerization Overcomes VM Limitations:- 
+1️. No Full OS Required
+2. Fast Startup
+3. Better Resource Utilization More containers can run on the same hardware ✔ Cost-effective
+4. Smaller Size
+5. Easy Scalability
+       Containers can be created or destroyed quickly , ✔ Perfect for microservices and load balancing
+
+Conclusion:--
+Virtual Machines have limitations such as high resource usage, slow startup, and poor scalability.
+To overcome these limitations, containerization is used.
+Containerization allows applications to run in lightweight containers that share the host OS kernel, resulting in faster startup, better resource utilization, easy scalability, and high portability. 
+
+------------------------------------------------------------------------------------------------
+
+
+Docker components :
+
+-----   Docker Architecture (Text Diagram)    ------
+						User
+						 │
+						Docker Client
+						 │
+						Docker Engine
+						 │
+						├── Docker Daemon
+						│   ├── Images
+						│   ├── Containers
+						│   ├── Networks
+						│   └── Volumes
+						│
+						└── Docker Registry (Docker Hub)
+
+Docker architecture consists of the Docker Client, Docker Daemon, Docker Images, Containers, Registry, Networks, and Volumes. The Docker Client communicates with the Docker Daemon, which manages containers and images. Images are pulled from a registry and executed as containers, providing lightweight, portable, and scalable application deployment.
+
+1. Docker Client
+    The Docker Client is the tool users interact with.
+	Uses commands like:
+		docker build
+		docker run
+		docker pull
+	Sends requests to the Docker Daemon.
+
+2. Docker Daemon (dockerd)
+	Runs in the background on the host system.
+	Responsible for:
+		Creating containers
+		Managing images
+		Handling networks and volumes
+	Listens for Docker Client requests.
+
+3. Docker Images
+	A Docker Image is a read-only template used to create containers.
+	Contains:
+		Application code
+		Dependencies
+		Libraries
+	Built using a Dockerfile.
+
+4. Dockerfile
+	A Dockerfile is a text file with instructions to build an image.
+	
+					Dockerfile → Image → Container Diagram
+					
+								Dockerfile
+								   │
+								   │ docker build
+								   ▼
+								Docker Image
+								   │
+								   │ docker run
+								   ▼
+								Docker Container
+
+
+
+5. Docker Containers
+	A Container is a running instance of an image.
+	Lightweight and fast.
+	Isolated from other containers.
+
+6. Docker Registry
+	A Docker Registry stores Docker images.
+	Public registry: Docker Hub
+	Private registries are also supported.
+
+7. Docker Engine
+	Core of Docker.
+	Includes:
+		Docker Client
+		Docker Daemon
+		REST API
+
+8. Docker Volumes
+		Used to persist data generated by containers.
+		Data is not lost when containers stop or are deleted.
+
+9. Docker Networks
+	Enable communication between containers.
+	Types:
+		Bridge
+		Host
+		Overlay
+
+------------------------------------------------------------------------------------------
+Docker Commands:-
+1. Check Docker Version
+	docker --version
+	👉 Shows installed Docker version.
+
+2. Pull an Image from Docker Hub
+	docker pull nginx
+	👉 Downloads the nginx image from Docker Hub.
+
+3. List Docker Images
+	docker images
+	👉 Shows all images available locally.
+	
+4. Run a Container
+	docker run nginx
+	👉 Creates and starts a container from the nginx image.
+Run in Background (Detached Mode)
+docker run -d nginx
+
+5. Run Container with Name
+	docker run --name webserver nginx
+	👉 Assigns a custom name to the container.
+
+6. Port Mapping
+	docker run -d -p 8080:80 nginx
+
+	👉 Access nginx via browser:
+	http://localhost:8080
+
+7. List Running Containers
+	docker ps
+	List All Containers (Running + Stopped)
+	docker ps -a
+
+8. Stop a Container
+	docker stop webserver
+	
+9. Start a Stopped Container
+	docker start webserver
+
+🔟 Remove a Container
+	docker rm webserver
+	Force Remove (Running Container)
+	docker rm -f webserver
+
+11. Remove an Image
+	docker rmi nginx
+	
+12. View Container Logs
+	docker logs webserver
+	
+13. Execute Command Inside Container
+	docker exec -it webserver bash
+	👉 Opens terminal inside container.
+
+14. Build Image Using Dockerfile
+	docker build -t myapp .
+	👉 Builds an image named myapp.
+	
+15. Dockerfile Example
+	FROM python:3.10
+	WORKDIR /app
+	COPY . .
+	RUN pip install flask
+	CMD ["python", "app.py"]
+	
+16. Run Custom Image
+	docker run -d -p 5000:5000 myapp
+	
+17. Docker Volume (Data Persistence)
+	Create Volume
+	docker volume create mydata
+Use Volume
+docker run -d -v mydata:/data nginx
+
+------------------------------------------------------------------------------------------
+What is a Dockerfile:-
+Definition:-  A Dockerfile is a text file that contains a set of instructions used to automatically build a Docker image.
+
+👉 It defines:
+	Base operating system
+	Application code
+	Dependencies
+	Configuration
+	Startup command
+
+-----  Typical Spring Boot Dockerfile  ----- 
+			FROM openjdk:17
+			WORKDIR /app
+			COPY target/springboot-app.jar app.jar
+			EXPOSE 8080
+			CMD ["java", "-jar", "app.jar"]
+
+1️. FROM openjdk:17
+		Uses OpenJDK 17 as the base image.
+		Provides Java Runtime Environment (JRE).
+		Spring Boot applications run on this JVM.
+
+2️. WORKDIR /app
+		Sets /app as the working directory inside the container.
+		All following commands run from this directory.
+
+3. COPY target/springboot-app.jar app.jar
+		Copies the built Spring Boot JAR from the host machine into the container.
+
+4️. EXPOSE 8080
+		Declares that the Spring Boot application listens on port 8080.
+		Common default port for Spring Boot.
+
+5️. CMD ["java", "-jar", "app.jar"]
+		Starts the Spring Boot application when the container runs.
+		Executes the JAR file using the Java command.
+
+------------------------------------------------------------------------------------------
+What is Docker Compose:- (Why we need we need DB Base Connection in our project then we will be having 2 containers 1->is DB Connection Container 2->is Noraml Project starting (JDK) Container --> so everytime to start the this project we need to tun two container seperately so avoid this dokcer-compose is helpfull --> in this will registry both container details and will start both container at same time ...so its good pratice if we have multiple containers.....)
+Docker Compose is a tool used to define and run multi-container applications using a single file called docker-compose.yml.
+Docker Compose is a tool to: Define and run multiple Docker containers as ONE application
+
+You describe:
+	Which containers to run
+	How they connect
+	Ports, env variables, volumes, networks …in a single file:  (docker-compose.yml)
+
+Then start everything with one command:-    docker compose up	
+
+Problems :- Why Docker Compose exists (Real Problem)
+Imagine your Spring Boot app needs:
+	Java app container
+	Database container (MySQL/Postgres)
+	Redis
+	Kafka
+
+Problem Without Compose: we need to run each seperately and we need follow the order , network issue will araise here ...hard to start and stop all at every time...
+	docker run ... app
+	docker run ... db
+	docker run ... redis
+	docker run ... kafka
+	
+----- But it will helps running the multiple containers as one application ...
+1. docker-compose.yml structure
+version: "3.9"
+
+services:
+  service-name:
+    image:
+    build:
+    ports:
+    environment:
+    volumes:
+    depends_on:
+
+This is Example Code or Setting ....
+--------------------------------------------
+version: "3.8"
+
+services:
+  app:
+    build: .
+    image: student-app:1.0
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/studentdb
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+    depends_on:
+      - db
+
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: studentdb
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
+--------------------------------------------
+1️. services: (ROOT SECTION)
+	This is the main section in docker-compose.yml
+	Every container you want to run is defined as a service
+	One service = one container 
+	You can run multiple services together with:   Command:-  docker-compose up
+
+Example :- services:
+                    app:
+                    db:
+		This means it has two containers in it called 
+		app → Spring Boot container
+        db → Database container
+	
+2️. service-name: (SERVICE IDENTIFIER)
+	services:
+	  service-name:
+This is a logical name for the container
+Used for:
+	Internal networking
+	depends_on
+	Logs and scaling
+
+3️. image: (USE EXISTING IMAGE)
+Tells Docker: use this image
+Image can be:
+	From Docker Hub
+	From local system
+	From private registry
+
+👉 Example:
+	image: postgres:15
+Meaning:Pull postgres:15 from Docker Hub , Create a container from it
+
+4️. build: (CREATE IMAGE FROM DOCKERFILE)
+build:
+Used when you have source code
+Docker will:
+	Read Dockerfile
+	Build an image
+	Run container from it
+
+5️. ports: (EXPOSE CONTAINER TO HOST)
+Example : ports:
+              - "8080:8080"
+		Format: HOST:CONTAINER
+		
+6️. environment: (ENV VARIABLES)
+Pass environment variables into container
+Used heavily in Spring Boot config
+
+👉 Example:
+	environment:
+	  SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/studentdb
+	  SPRING_DATASOURCE_USERNAME: postgres
+	  SPRING_DATASOURCE_PASSWORD: postgres
+
+7️. depends_on: (START ORDER)
+Ensures one service starts before another
+Mostly used for:
+	App depends on DB
+	App depends on Kafka/Redis
+
+Example:
+depends_on:
+  - db
+  Meaning: db starts first ->Then app
+
+8. volumes: (DATA PERSISTENCE & FILE SHARING)
+Volumes are used to store data outside the container, so that:
+	Data is NOT lost when a container stops or restarts
+	Data can be shared between containers
+	Container becomes stateless, data becomes persistent
+
+📌 Containers are temporary
+	If a container is deleted → all data inside it is lost ❌
+	Volumes solve this problem
+
+-----------------------------------------------------------------------------------------------------------------------------
+-- To Run Spring boot project With-Out Docker Compose:--
+1. Build Docker Image -->  Run this command from the folder where Dockerfile exists:
+command :-   docker build -t student-app:1.0 .
+
+Explanation:
+-t student-app:1.0 → image name & version
+.  --> means: “use the current directory as build context”
+
+2. Run Docker Container --> Now run the container:
+command:-  docker run -d -p 8080:8080 --name student-container student-app:1.0
+
+Explanation:
+-d → detached mode
+-p 8080:8080 → hostPort:containerPort
+--name → container name
+
+3. Run this command to keep alive the server :-
+docker run -d -e SPRING_PROFILES_ACTIVE=dev  -p 8080:8080 student-app:1.0
+
+-----------------------------------------------------------------------------------------------------------------------------
+-- To Run Spring boot project With Docker compose :--
+command :-  docker-compose up --build
+
+What happens when you run:- Docker Compose reads docker-compose.yml
+		Sees build: .
+		Finds Dockerfile
+		Builds image using Dockerfile
+		Creates container
+		Runs your Spring Boot app
+
+
+-----------------------------------------------------------------------------------------------------------------------------
+
