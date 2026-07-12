@@ -757,3 +757,57 @@ What happens when you run:- Docker Compose reads docker-compose.yml
 
 -----------------------------------------------------------------------------------------------------------------------------
 
+Docker Registry :--
+Docker Registry (Short Notes)
+
+A Docker Registry is a storage service where Docker Images are stored and managed.
+
+It stores Docker images.
+You can push your images to a registry and pull images from it.
+The default Docker registry is Docker Hub.
+A registry contains multiple repositories, and each repository contains different versions (tags) of an image.
+
+Example:-
+Docker Hub (Registry)
+        │
+        ├── spring-boot-app (Repository)
+        │      ├── v1.0
+        │      └── v2.0
+        │
+        └── node-app (Repository)
+               ├── v1.0
+               └── latest
+
+What Happens in the Background?
+When you run:docker container run -d -p 5000:5000 in28min/hello-world-nodejs:0.0.1.RELEASE
+
+1. Checks if the image exists on your local machine.
+2. If not found, downloads the image from the Docker Registry (Docker Hub).
+3. Creates a new container from the image.
+4. Starts the application inside the container.
+5. Maps Host Port 5000 to Container Port 5000 (-p 5000:5000).
+6. Runs the container in the background (-d).
+
+docker run
+     │
+     ▼
+Check Local Image
+     │
+     ├── Found → Create Container
+     │
+     └── Not Found
+             │
+             ▼
+Download Image from Docker Hub
+             │
+             ▼
+Create Container
+             │
+             ▼
+Start Application
+             │
+             ▼
+Map Ports (5000 → 5000)
+             │
+             ▼
+Run in Background (-d)
